@@ -1,0 +1,16 @@
+{
+  "name": "instagram-bot",
+  "version": "1.0.0",
+  "description": "Instagram Downloader Bot",
+  "license": "MIT",
+  "author": "whoami",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "start": "node --watch --env-file=.env index.js"
+  },
+  "dependencies": {
+    "mysql2": "^3.22.5",
+    "telegraf": "^4.16.3"
+  }
+}
