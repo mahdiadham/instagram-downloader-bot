@@ -5,8 +5,8 @@ An Instagram Downloader Bot with NodeJS
 1. Clone the repository first and install the requirements packages :
    
    ```bash
-   git clone https://github.com/mahdiadham/instagram-bot.git
-   cd instagram-bot-main
+   git clone https://github.com/mahdiadham/instagram-downloader-bot.git
+   cd instagram-downloader-bot
    npm install
    ```
 2. Create .env file in the root directory and replace the values :
