@@ -1,6 +1,9 @@
 # Instagram Bot
 An Instagram Downloader Bot with NodeJS
 
+## Technologies :
+<img src="https://skillicons.dev/icons?i=ndoejs,typescript,mysql&perline=3" />
+
 ## Instructions
 1. Clone the repository first and install the requirements packages :
    
