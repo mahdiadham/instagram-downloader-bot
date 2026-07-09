@@ -8,10 +8,11 @@ const fetchData = async (url: string, ctx: Context, messages: Message, apiToken:
 
     const chatID: number = ctx.chat.id;
     const messageID: number = ctx.message.message_id;
-    const link: string | undefined = new URL(ctx.message.text).pathname.split("/")[2];
+    const link: string | undefined = ctx.message.text;
     const firstName: string | undefined = "first_name" in ctx.chat ? ctx.chat.first_name : undefined;
     const username: string | undefined = "username" in ctx.chat ? ctx.chat.username : undefined;
 
+    const shortCode: string | undefined = new URL(link).pathname.split("/")[2];
     const requestOptions: RequestInit = {
         method: "GET",
         headers: {
@@ -24,7 +25,7 @@ const fetchData = async (url: string, ctx: Context, messages: Message, apiToken:
     const processMessage = await ctx.reply(messages.processMessage);
 
     try {
-        const response = await fetch(`${url}?shortcode=${link}`, requestOptions);
+        const response = await fetch(`${url}?shortcode=${shortCode}`, requestOptions);
 
         if (!response.ok) throw new Error(`Request Error : ${response.status} - ${response.statusText}`);
 
