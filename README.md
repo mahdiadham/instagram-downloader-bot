@@ -12,20 +12,32 @@ An Instagram Downloader Bot with NodeJS
    cd instagram-downloader-bot
    npm install
    ```
-2. Create .env file in the root directory and replace the values :
+2. Create an account in <a href="https://one-api.ir">One Service</a> and get your own <code>API URL</code> and <code>API Token</code>.
+3. Create .env file in the root directory and replace with your own values :
    
    ```bash
    BOT_TOKEN=
    API_URL=
+   API_TOKEN=
    DB_USERNAME=
    DB_PASSWORD=
    DB_HOST=
    DB_PORT=
    DB_NAME=
    ```
-3. Launch the bot with command :
+4. Develope the bot with command :
+   
+   ```bash
+   npm run dev
+   ```
+5. Build the project :
+   
+   ```bash
+   npm run build
+   ```
+6. Launch the bot with command :
    
    ```bash
    npm start
    ```
-4. Enjoy the bot !
+7. Enjoy the bot !
