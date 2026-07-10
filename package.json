@@ -7,16 +7,19 @@
   "type": "module",
   "main": "dist/index.js",
   "scripts": {
-    "dev": "tsx watch --env-file=.env src/index.ts",
+    "dev": "concurrently \"tsx watch --env-file=.env src/index.ts\" \"tsx watch src/api/server.ts\"",
     "build": "tsc",
-    "start": "node --env-file=.env dist/index.js"
+    "start": "concurrently \"node --env-file=.env dist/index.js\" \"node --env-file=.env dist/api/server.js\""
   },
   "dependencies": {
+    "express": "^5.2.1",
     "mysql2": "^3.22.5",
     "telegraf": "^4.16.3"
   },
   "devDependencies": {
+    "@types/express": "^5.0.6",
     "@types/node": "^26.1.1",
+    "concurrently": "^10.0.3",
     "tsx": "^4.23.0",
     "typescript": "^7.0.2"
   }

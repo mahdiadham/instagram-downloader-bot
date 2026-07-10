@@ -3,7 +3,7 @@ import type { ResultSetHeader } from "mysql2";
 import type { Message } from "../types/index.js";
 import db from "../configs/database.js";
 
-const fetchData = async (url: string, ctx: Context, messages: Message, apiToken: string) => {
+const fetchData = async (url: string, ctx: Context, messages: Message) => {
     if (!ctx.chat || !ctx.message || !("text" in ctx.message)) return;
 
     const chatID: number = ctx.chat.id;
@@ -12,25 +12,15 @@ const fetchData = async (url: string, ctx: Context, messages: Message, apiToken:
     const firstName: string | undefined = "first_name" in ctx.chat ? ctx.chat.first_name : undefined;
     const username: string | undefined = "username" in ctx.chat ? ctx.chat.username : undefined;
 
-    const shortCode: string | undefined = new URL(link).pathname.split("/")[2];
-    const requestOptions: RequestInit = {
-        method: "GET",
-        headers: {
-            "Content-Type": "application/json",
-            "one-api-token": apiToken
-        },
-        redirect: "follow"
-    };
-
     const processMessage = await ctx.reply(messages.processMessage);
 
     try {
-        const response = await fetch(`${url}?shortcode=${shortCode}`, requestOptions);
+        const response = await fetch(`${url}?url=${link}`);
 
         if (!response.ok) throw new Error(`Request Error : ${response.status} - ${response.statusText}`);
 
         const data = await response.json();
-        const mediaURL: string = data.result.media[0].url || "";
+        const mediaURL: string = data.videoUrl;
         const insertUsersDataQuery: string = "INSERT INTO users_data (name, username, chat_id, message_id, link, media_url) VALUES (?, ?, ?, ?, ?, ?)";
 
         db.query(insertUsersDataQuery, [firstName, username, chatID, messageID, link, mediaURL], async (error: Error | null, result: ResultSetHeader) => {
@@ -40,11 +30,17 @@ const fetchData = async (url: string, ctx: Context, messages: Message, apiToken:
             }
             await ctx.telegram.deleteMessage(chatID, processMessage.message_id);
             try {
-                await ctx.replyWithVideo(mediaURL, { caption: data.result.caption || "" });
+                await ctx.replyWithVideo(mediaURL, {
+                    caption: data.caption ?
+                    data.caption?.length <= 1024 ?
+                    data.caption :
+                    `${data.caption?.slice(0, 1020)} ...` :
+                    !data.caption && ""
+                });
             }
             catch (error) {
                 console.error(`Video send failed => ${error}`);
-                await ctx.reply(messages.serverError);
+                await ctx.reply(messages.invalidURL);
             }
         });
 
