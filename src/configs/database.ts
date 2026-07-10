@@ -1,24 +1,33 @@
-import mysql, { type ConnectionOptions } from "mysql2";
+import mysql, { type PoolOptions, type Pool } from "mysql2/promise";
 
 const getEnvVar = (key: string): string => {
     const value = process.env[key];
+
     if (!value) throw new Error(`Missing required environment variable: ${key}`);
+
     return value;
 };
 
-const dbConfig: ConnectionOptions = {
+const dbConfig: PoolOptions = {
     user: getEnvVar("DB_USERNAME"),
     host: getEnvVar("DB_HOST"),
     password: getEnvVar("DB_PASSWORD"),
     port: Number(getEnvVar("DB_PORT")),
-    database: getEnvVar("DB_NAME")
+    database: getEnvVar("DB_NAME"),
+    waitForConnections: true,
+    connectionLimit: 10
 };
 
-const db = mysql.createConnection(dbConfig);
+const db: Pool = mysql.createPool(dbConfig);
 
-db.connect(error => {
-    if (error) console.error(`Database Connection Error => ${error.stack}`);
-    else console.log("Database Connected Successfully !");
-});
+try {
+    const connection = await db.getConnection();
+    console.log("✅ Database connected successfully.");
+    connection.release();
+} catch (error) {
+    console.error("❌ Failed to connect to database.");
+    console.error(error);
+    process.exit(1);
+}
 
 export default db;

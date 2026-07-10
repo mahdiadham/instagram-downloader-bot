@@ -7,7 +7,7 @@
   "type": "module",
   "main": "dist/index.js",
   "scripts": {
-    "dev": "concurrently \"tsx watch --env-file=.env src/index.ts\" \"tsx watch src/api/server.ts\"",
+    "dev": "concurrently \"tsx --watch --env-file=.env src/index.ts\" \"tsx --watch src/api/server.ts\"",
     "build": "tsc",
     "start": "concurrently \"node --env-file=.env dist/index.js\" \"node --env-file=.env dist/api/server.js\""
   },

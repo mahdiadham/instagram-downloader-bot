@@ -70,5 +70,5 @@ app.get("/", (_req: Request, res: Response) => {
 });
 
 app.listen(port, () => {
-    console.log(`[api] Instagram downloader API running on http://localhost:${port}`);
+    console.log(`✅ [api] Instagram downloader API running on http://localhost:${port}`);
 });

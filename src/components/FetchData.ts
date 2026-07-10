@@ -23,33 +23,37 @@ const fetchData = async (url: string, ctx: Context, messages: Message) => {
         const mediaURL: string = data.videoUrl;
         const insertUsersDataQuery: string = "INSERT INTO users_data (name, username, chat_id, message_id, link, media_url) VALUES (?, ?, ?, ?, ?, ?)";
 
-        db.query(insertUsersDataQuery, [firstName, username, chatID, messageID, link, mediaURL], async (error: Error | null, result: ResultSetHeader) => {
-            if (error) {
-                console.error(`Database Error => ${error.stack}`);
-                return;
-            }
-            await ctx.telegram.deleteMessage(chatID, processMessage.message_id);
-            try {
-                await ctx.replyWithVideo(mediaURL, {
-                    caption: data.caption ?
-                    data.caption?.length <= 1024 ?
-                    data.caption :
-                    `${data.caption?.slice(0, 1020)} ...` :
-                    !data.caption && ""
-                });
-            }
-            catch (error) {
-                console.error(`Video send failed => ${error}`);
-                await ctx.reply(messages.invalidURL);
-            }
-        });
+        try {
+            const [result] = await db.execute<ResultSetHeader>(
+                insertUsersDataQuery,
+                [firstName ?? null, username ?? null, chatID, messageID, link, mediaURL]
+            );
+        }
+        catch (error) {
+            console.error(`Database Error => ${error}`);
+            return;
+        }
 
-    }
-    catch (error) {
+        await ctx.telegram.deleteMessage(chatID, processMessage.message_id);
+
+        try {
+            await ctx.replyWithVideo(mediaURL, {
+                caption: data.caption
+                    ? data.caption.length <= 1024
+                        ? data.caption
+                        : `${data.caption.slice(0, 1020)} ...`
+                    : ""
+            });
+        } catch (error) {
+            console.error(`Video send failed => ${error}`);
+            await ctx.reply(messages.invalidURL);
+        }
+
+    } catch (error) {
         const message = error instanceof Error ? error.stack : String(error);
         console.error(`Request Error => ${message}`);
         await ctx.telegram.editMessageText(chatID, processMessage.message_id, undefined, messages.requestError);
     }
+};
 
-}
 export default fetchData;
