@@ -2,7 +2,7 @@
 An Instagram Downloader Bot With Personal API
 
 ## Technologies :
-<img src="https://skillicons.dev/icons?i=nodejs,experss,typescript,mysql&perline=4" />
+<img src="https://skillicons.dev/icons?i=nodejs,express,typescript,mysql&perline=4" />
 
 ## Instructions
 1. Clone the repository first and install the requirements packages :
