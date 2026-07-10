@@ -9,7 +9,7 @@ const token = process.env.BOT_TOKEN;
 const apiURL = process.env.API_URL;
 
 if (!token || !apiURL) {
-    console.error("Bot token or API url or API token must be set !");
+    console.error("Bot token or API url must be set !");
     process.exit(1);
 }
 
